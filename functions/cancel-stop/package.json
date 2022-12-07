@@ -1,0 +1,138 @@
+{
+  "name": "CancelStop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "nyc --reporter=lcov --reporter=text --reporter=html mocha -r ts-node/register --require source-map-support/register --recursive --exclude \"node_modules/**/*\" \"**/**/**/*.spec.ts\"",
+    "test:bin": "mocha -r ts-node/register --require source-map-support/register --recursive --exclude \"node_modules/**/*\" \"bin/tests/*.spec.js\"",
+    "run:local": "sls offline start --param=\"version_tag=local\" --stage dev",
+    "debug": "SLS_DEBUG=* & export AWS_XRAY_CONTEXT_MISSING=LOG_ERROR AWS_XRAY_LOG_LEVEL=INFO _X_AMZN_TRACE_ID='Root=1-5759e988-bd862e3fe1be46a994272793;Parent=53995c3f42cd8ad8;Sampled=0'; serverless offline start --allowCache --noPrependStageInUrl --stage dev --param=\"version_tag=local\"",
+    "debug_windows": "SET SLS_DEBUG=* & SET \"AWS_XRAY_CONTEXT_MISSING=LOG_ERROR\" & SET \"AWS_XRAY_LOG_LEVEL=INFO\" & SET \"_X_AMZN_TRACE_ID=Root=1-5759e988-bd862e3fe1be46a994272793;Parent=53995c3f42cd8ad8;Sampled=0\" && node --inspect ./node_modules/serverless/bin/serverless.js offline start --noPrependStageInUrl --stage dev  --param=\"version_tag=local\" ",
+    "postinstall": "./bin/codegen.sh",
+    "postinstall_windows": "cd bin && codegen.bat",
+    "lint:diff": "eslint . -c .eslintrc.diff.json --format=compact",
+    "lint:staged": "eslint . -c .eslintrc.staged.json",
+    "lint": "eslint . -c .eslintrc.json",
+    "prepare": "husky install",
+    "prettier": "prettier --write --ignore-unknown ."
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": false,
+    "per-file": true,
+    "branches": 50,
+    "lines": 75,
+    "functions": 75,
+    "statements": 75,
+    "watermarks": {
+      "lines": [
+        80,
+        95
+      ],
+      "functions": [
+        80,
+        95
+      ],
+      "branches": [
+        80,
+        95
+      ],
+      "statements": [
+        80,
+        95
+      ]
+    },
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ],
+    "include": [
+      "functions/**",
+      "functions_eda/**",
+      "utils/**",
+      "bin/**"
+    ],
+    "exclude": [
+      "e2e",
+      "fixtures",
+      "gulpfile.js",
+      "common/util",
+      "**/*.spec.js",
+      "**/*.spec.ts",
+      "**/*.mocks.ts",
+      "**/*.mocks.js",
+      "**/*.d.ts",
+      "services/soap-client-debug/*.js"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,ts}": [
+      "eslint . -c .eslintrc.staged.json",
+      "prettier --write"
+    ],
+    "!(*.{js,ts})": [
+      "prettier --write --ignore-unknown"
+    ]
+  },
+  "prettier": "@republicservicesrepository/dops-common-dependencies/lib/prettier.config",
+  "dependencies": {
+    "@republicservicesrepository/dops-client-shared": "2022.12.1-5",
+    "@republicservicesrepository/dops-shared": "2022.12.1-1",
+    "http-status-codes": "^2.2.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.1",
+    "moment-timezone": "^0.5.34"
+  },
+  "peerDependencies": {
+    "aws-xray-sdk": "^3.3.6",
+    "aws-sdk": "^2.1072.0"
+  },
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@republicservicesrepository/dops-common-dependencies": "^1.0.7",
+    "@republicservicesrepository/eslint-config-rise-typescript": "^1.0.7",
+    "@republicservicesrepository/eslint-plugin-rise-diff": "^1.0.7",
+    "@republicservicesrepository/serverless-discovery-plugin": "^1.0.0",
+    "@types/aws-lambda": "^8.10.92",
+    "@types/chai": "^4.3.0",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/mocha": "^9.1.0",
+    "@types/node": "^14.18.10",
+    "@types/serverless": "^3.0.1",
+    "@types/sinon": "^10.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.38.0",
+    "@typescript-eslint/parser": "^5.38.0",
+    "aws-sdk-mock": "^5.6.2",
+    "chai": "^4.3.6",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^8.23.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-diff": "^2.0.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-promise": "^6.0.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
+    "mocha": "^10.0.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.7.1",
+    "serverless": "^3.3.0",
+    "serverless-deployment-bucket": "^1.6.0",
+    "serverless-offline": "^8.4.0",
+    "serverless-plugin-log-subscription": "^2.1.1",
+    "serverless-plugin-split-stacks": "^1.11.3",
+    "serverless-plugin-typescript": "^2.1.1",
+    "serverless-prune-plugin": "^2.0.1",
+    "sinon": "^13.0.1",
+    "sinon-chai": "^3.7.0",
+    "ts-mock-imports": "^1.3.8",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5",
+    "typescript-json-schema": "^0.53.0"
+  }
+}
